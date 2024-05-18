@@ -1,6 +1,9 @@
 #include "pch.h"
+#include "logger.h"
 #include "winmm.h"
 #include <mmsystem.h>
+#include <filesystem>
+#include <format>
 
 HMODULE winmm_dll;
 
@@ -404,7 +407,33 @@ DWORD WINAPI Load(LPVOID lpParam) {
 		return 0;
 	}
 
-	LoadLibrary(L"crypthook");
+	logger::init();
+
+	auto path = std::filesystem::current_path();
+	path.append("crypthook.dll");
+
+	if (std::filesystem::exists(path))
+	{
+		logger::info("Loaded crypthook bypass.");
+		LoadLibrary(L"crypthook");
+	}
+	else
+	{
+		logger::info("Could not find crypthook.dll file.");
+	}
+
+	char buf[MAX_PATH];
+	GetModuleFileNameA(nullptr, buf, MAX_PATH);
+	auto procFullPathString = std::string(buf);
+	auto procPath = std::filesystem::path(procFullPathString);
+	auto procFilename = procPath.filename().string();
+
+	logger::info(std::format("Executable name: {}.", procFilename));
+
+	if (procFilename.compare("DragonAgeInquisition.exe") == 0)
+	{
+		logger::info("Dragon Age Inquisition is running.");
+	}
 
 	return 0;
 }
