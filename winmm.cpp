@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "logger.h"
+#include "dai_workaround.h"
 #include "winmm.h"
 #include <mmsystem.h>
 #include <filesystem>
@@ -432,7 +432,7 @@ DWORD WINAPI Load(LPVOID lpParam) {
 
 	if (procFilename.compare("DragonAgeInquisition.exe") == 0)
 	{
-		logger::info("Dragon Age Inquisition is running.");
+		daiworkaround::init();
 	}
 
 	return 0;
