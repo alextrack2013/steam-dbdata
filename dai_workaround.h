@@ -1,19 +1,4 @@
 #include "pch.h"
-#include <MinHook.h>
-
-template <typename T>
-inline MH_STATUS MH_CreateHookEx(LPVOID pTarget, LPVOID pDetour, T** ppOriginal)
-{
-	return MH_CreateHook(pTarget, pDetour, reinterpret_cast<LPVOID*>(ppOriginal));
-}
-
-template <typename T>
-inline MH_STATUS MH_CreateHookApiEx(
-	LPCWSTR pszModule, LPCSTR pszProcName, LPVOID pDetour, T** ppOriginal)
-{
-	return MH_CreateHookApi(
-		pszModule, pszProcName, pDetour, reinterpret_cast<LPVOID*>(ppOriginal));
-}
 
 namespace daiworkaround
 {
@@ -66,8 +51,30 @@ namespace daiworkaround
 		return retValueWindow;
 	}
 
+	static bool is_wine()
+	{
+		HMODULE hntdll = GetModuleHandle(L"ntdll.dll");
+		if (!hntdll)
+		{
+			return false;
+		}
+
+		if (GetProcAddress(hntdll, "wine_get_version") != NULL)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+
 	static void init()
 	{
+		if (!is_wine())
+		{
+			logger::info("Windows detected: DAI workaround is not needed.");
+			return;
+		}
+
 		logger::info("Start DAI workaround.");
 
 		if (MH_Initialize() != MH_OK)

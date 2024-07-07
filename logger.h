@@ -1,6 +1,8 @@
 #include "pch.h"
 #include <fstream>
 #include <iostream>
+#include <iomanip>
+#include <time.h>
 
 namespace logger
 {
@@ -25,11 +27,15 @@ namespace logger
 			return;
 		}
 
-		std::cout << message << std::endl;
+		auto t = std::time(NULL);
+		struct tm tm;
+		localtime_s(&tm,&t);
+
+		std::cout << std::put_time(&tm, "[%d-%m-%Y %H:%M:%S] ") << message << std::endl;
 
 		std::ofstream logFile(fileName, std::ios::out | std::ios::app);
 
-		logFile << message << std::endl;
+		logFile << std::put_time(&tm, "[%d-%m-%Y %H:%M:%S] ") << message << std::endl;
 
 		logFile.close();
 	}

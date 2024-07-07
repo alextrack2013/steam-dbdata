@@ -1,9 +1,10 @@
 #include "pch.h"
+#include "minhook_extension.h"
 #include "dai_workaround.h"
+#include "srttr_workaround.h"
 #include "winmm.h"
 #include <mmsystem.h>
 #include <filesystem>
-#include <format>
 
 HMODULE winmm_dll;
 
@@ -428,11 +429,16 @@ DWORD WINAPI Load(LPVOID lpParam) {
 	auto procPath = std::filesystem::path(procFullPathString);
 	auto procFilename = procPath.filename().string();
 
-	logger::info(std::format("Executable name: {}.", procFilename));
+	logger::info("Executable name: '" + procFilename + "'.");
 
 	if (procFilename.compare("DragonAgeInquisition.exe") == 0)
 	{
 		daiworkaround::init();
+	}
+
+	if (procFilename.compare("SRTTR.exe") == 0 || procFilename.compare("srttr.exe"))
+	{
+		srttrworkaround::init();
 	}
 
 	return 0;
