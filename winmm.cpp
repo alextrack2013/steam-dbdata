@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "minhook_extension.h"
 #include "dai_workaround.h"
-#include "srttr_workaround.h"
 #include "winmm.h"
 #include <mmsystem.h>
 #include <filesystem>
@@ -401,6 +400,16 @@ void load_winmm() {
 	WRAPPER_FUNC(waveOutWrite);
 }
 
+std::string static ToLower(std::string data)
+{
+	std::string newData = data;
+
+	std::transform(newData.begin(), newData.end(), newData.begin(),
+		[](unsigned char c) { return std::tolower(c); });
+
+	return newData;
+}
+
 DWORD WINAPI Load(LPVOID lpParam) {
 	load_winmm();
 	if (!winmm_dll)
@@ -431,14 +440,9 @@ DWORD WINAPI Load(LPVOID lpParam) {
 
 	logger::info("Executable name: '" + procFilename + "'.");
 
-	if (procFilename.compare("DragonAgeInquisition.exe") == 0)
+	if (ToLower(procFilename).compare("dragonageinquisition.exe") == 0)
 	{
 		daiworkaround::init();
-	}
-
-	if (procFilename.compare("SRTTR.exe") == 0 || procFilename.compare("srttr.exe"))
-	{
-		srttrworkaround::init();
 	}
 
 	return 0;

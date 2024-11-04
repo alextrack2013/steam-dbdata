@@ -36,9 +36,6 @@
     <ClInclude Include="dai_workaround.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="srttr_workaround.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="minhook_extension.h">
       <Filter>Header Files</Filter>
     </ClInclude>
