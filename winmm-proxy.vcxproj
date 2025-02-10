@@ -161,6 +161,7 @@
     <ClInclude Include="dai_workaround.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="me_workaround.h" />
     <ClInclude Include="minhook_extension.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="winmm.h" />

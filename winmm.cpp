@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "minhook_extension.h"
 #include "dai_workaround.h"
+#include "me_workaround.h"
 #include "winmm.h"
 #include <mmsystem.h>
 #include <filesystem>
@@ -444,6 +445,11 @@ DWORD WINAPI Load(LPVOID lpParam) {
 	{
 		daiworkaround::init();
 	}
+
+	/*if (ToLower(procFilename).compare("masseffect1.exe") == 0)
+	{
+		meworkaround::init();
+	}*/
 
 	return 0;
 }
