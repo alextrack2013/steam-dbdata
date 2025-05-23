@@ -1,8 +1,9 @@
-# Winmm Proxy
-Used with [Frosty Mod Manager](https://github.com/maniman303/FrostyToolsuite) fork for Linux, alongside [CryptHook](https://github.com/maniman303/CryptHook).
+# steam-dbdata
+Obtains original Denuvo token request ticket when no valid token is found via HttpSendRequestA IAT hook
 
-### Dragon Age Inquisition controller support on Linux
-This dll contains ported workaround to fix controller support in DAI, from https://github.com/cammoore1/DAI-proton-ge-custom. It should work with any Proton version. Workaround is applied via method hooking.
+## Usage
+Place winmm.dll in the root directory of a Steam game that uses this DRM
 
-### Build
-Requires VCPKG and MinHook installed: `.\vcpkg install minhook:x64-windows-static-md`.
+## Credits
+- https://github.com/maniman303/winmm-proxy
+- https://github.com/adamhlt/IAT-Hooking

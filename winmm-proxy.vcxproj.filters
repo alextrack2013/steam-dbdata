@@ -21,25 +21,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="winmm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="logger.h">
+    <ClInclude Include="base64.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dai_workaround.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="minhook_extension.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="me_workaround.h">
+    <ClInclude Include="iat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,10 +35,10 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="winmm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="winmm.cpp">
+    <ClCompile Include="iat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

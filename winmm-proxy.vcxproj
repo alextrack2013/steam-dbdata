@@ -73,6 +73,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>winmmproxy</TargetName>
+    <IncludePath>C:\Users\alex\source\repos\winmm-proxy\minhook\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>winmmproxy</TargetName>
@@ -82,6 +83,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>winmm</TargetName>
+    <ExecutablePath>C:\Git\winmm-proxy\minhook\src;C:\Git\Detours-main\src;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>C:\Git\winmm-proxy\minhook\include;C:\Git\Detours-main\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Git\winmm-proxy\minhook\lib;C:\Git\Detours-main\lib.X64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -140,8 +144,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;WINMMPROXY_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -158,22 +163,13 @@
     <None Include="winmm.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dai_workaround.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="logger.h" />
-    <ClInclude Include="me_workaround.h" />
-    <ClInclude Include="minhook_extension.h" />
-    <ClInclude Include="pch.h" />
+    <ClInclude Include="base64.h" />
+    <ClInclude Include="iat.h" />
     <ClInclude Include="winmm.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="iat.cpp" />
     <ClCompile Include="winmm.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

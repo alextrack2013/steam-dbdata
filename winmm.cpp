@@ -1,10 +1,11 @@
-#include "pch.h"
-#include "minhook_extension.h"
-#include "dai_workaround.h"
-#include "me_workaround.h"
 #include "winmm.h"
 #include <mmsystem.h>
 #include <filesystem>
+#include <wininet.h>
+#include "base64.h"
+#include "iat.h"
+
+#pragma comment(lib, "wininet.lib")
 
 HMODULE winmm_dll;
 
@@ -401,55 +402,52 @@ void load_winmm() {
 	WRAPPER_FUNC(waveOutWrite);
 }
 
-std::string static ToLower(std::string data)
-{
-	std::string newData = data;
+using HttpSendRequestA_t = BOOL(WINAPI*)(HINTERNET, LPCSTR, DWORD, LPVOID, DWORD);
 
-	std::transform(newData.begin(), newData.end(), newData.begin(),
-		[](unsigned char c) { return std::tolower(c); });
+HttpSendRequestA_t oHttpSendRequestA = HttpSendRequestA;
 
-	return newData;
+bool ticketFound = 0;
+
+BOOL WINAPI _HttpSendRequestA(HINTERNET hRequest,
+	LPCSTR lpszHeaders,
+	DWORD dwHeadersLength,
+	LPVOID lpOptional,
+	DWORD dwOptionalLength) {
+	std::string headers(lpszHeaders);
+
+	// Check request headers
+	if (headers.find("DB") != std::string::npos && !ticketFound) {
+		const char* ticket = static_cast<char*>(lpOptional);
+
+		// The body is a Base64 URL encoded XML container
+		std::vector<unsigned char> token_req_vec = decode_base64url(ticket);
+		std::string token_req(token_req_vec.begin(), token_req_vec.end());
+
+		printf("\nDenuvo Ticket");
+		printf("\n-------------");
+		printf("\nEncrypted: %s", ticket);
+		printf("\n\nDecrypted: %s", token_req.c_str());
+
+		ticketFound = true;
+	}
+
+	return oHttpSendRequestA(hRequest, lpszHeaders, dwHeadersLength, lpOptional, dwOptionalLength);
 }
+
+FILE* fp = 0;
 
 DWORD WINAPI Load(LPVOID lpParam) {
 	load_winmm();
 	if (!winmm_dll)
 	{
-		return 0;
+		return 1;
 	}
 
-	logger::init();
+	// Setup console
+	AllocConsole();
+	freopen_s(&fp, "CONOUT$", "w", stdout);
 
-	auto path = std::filesystem::current_path();
-	path.append("crypthook.dll");
-
-	if (std::filesystem::exists(path))
-	{
-		logger::info("Loaded crypthook bypass.");
-		LoadLibrary(L"crypthook");
-	}
-	else
-	{
-		logger::info("Could not find crypthook.dll file.");
-	}
-
-	char buf[MAX_PATH];
-	GetModuleFileNameA(nullptr, buf, MAX_PATH);
-	auto procFullPathString = std::string(buf);
-	auto procPath = std::filesystem::path(procFullPathString);
-	auto procFilename = procPath.filename().string();
-
-	logger::info("Executable name: '" + procFilename + "'.");
-
-	if (ToLower(procFilename).compare("dragonageinquisition.exe") == 0)
-	{
-		daiworkaround::init();
-	}
-
-	/*if (ToLower(procFilename).compare("masseffect1.exe") == 0)
-	{
-		meworkaround::init();
-	}*/
+	IAT::Hook("wininet.dll", "HttpSendRequestA", &_HttpSendRequestA);
 
 	return 0;
 }
