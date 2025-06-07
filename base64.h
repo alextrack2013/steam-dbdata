@@ -59,6 +59,8 @@ std::vector<unsigned char> base64_decode(const std::string& encoded_string) {
     return ret;
 }
 
-std::vector<unsigned char> decode_base64url(const std::string& input) {
-    return base64_decode(base64url_to_base64(input));
+std::string decode_base64url(const std::string& input) {
+    std::vector<unsigned char> temp = base64_decode(base64url_to_base64(input));
+
+    return std::string(temp.begin(), temp.end());
 }

@@ -420,13 +420,12 @@ BOOL WINAPI _HttpSendRequestA(HINTERNET hRequest,
 		const char* ticket = static_cast<char*>(lpOptional);
 
 		// The body is a Base64 URL encoded XML container
-		std::vector<unsigned char> token_req_vec = decode_base64url(ticket);
-		std::string token_req(token_req_vec.begin(), token_req_vec.end());
+		std::string ticket_dec = decode_base64url(ticket);
 
 		printf("\nDenuvo Ticket");
 		printf("\n-------------");
 		printf("\nEncrypted: %s", ticket);
-		printf("\n\nDecrypted: %s", token_req.c_str());
+		printf("\n\nDecrypted: %s", ticket_dec.c_str());
 
 		ticketFound = true;
 	}
